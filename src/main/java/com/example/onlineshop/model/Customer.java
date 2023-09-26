@@ -22,6 +22,8 @@ public class Customer {
 
     private String lastName;
 
+    private String username;
+
     private LocalDateTime createdAt;
 
     private String email;
