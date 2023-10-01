@@ -28,6 +28,7 @@ public class UserDto {
 
     @NotBlank(message = "Password must be expressed")
     private String password;
-//    private UserType userType;
-//    private LocalDateTime createdAt;
+
+    private UserType userType;
+    private LocalDateTime createdAt;
 }

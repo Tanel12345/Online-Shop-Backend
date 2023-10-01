@@ -1,5 +1,6 @@
 package com.example.onlineshop.dto;
 
+import com.example.onlineshop.enums.user.UserType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -19,4 +20,6 @@ public class CustomerResponseDTO {
     private LocalDateTime createdAt;
 
     private String email;
+
+    private UserType userType;
 }

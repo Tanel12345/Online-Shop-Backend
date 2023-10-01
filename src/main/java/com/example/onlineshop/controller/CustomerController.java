@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Data
 @RestController
 @RequestMapping("/customers")
-@CrossOrigin(origins = "http://localhost:4200/")
+//@CrossOrigin(origins = "http://localhost:4200/")
 public class CustomerController {
 
     private final CustomerService customerService;

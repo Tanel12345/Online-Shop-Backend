@@ -2,6 +2,7 @@ package com.example.onlineshop.service;
 
 import com.example.onlineshop.dto.UserDto;
 import com.example.onlineshop.dto.CustomerResponseDTO;
+import com.example.onlineshop.enums.user.UserType;
 import com.example.onlineshop.mapper.CustomerMapper;
 import com.example.onlineshop.entity.User;
 import com.example.onlineshop.repository.UserRepository;
@@ -26,6 +27,7 @@ public class CustomerService {
         User user = customerMapper.toEntity(userDTO);
         user.setCreatedAt(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setUserType(UserType.CUSTOMER);
 
         User savedUser = userRepository.save(user);
 
