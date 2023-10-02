@@ -1,15 +1,16 @@
 package com.example.onlineshop.dto;
 
+import com.example.onlineshop.enums.user.UserType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
+
 @Data
 @Accessors(chain = true)
-public class CustomerDTO {
+public class UserDto {
 
     private Integer id;
 
@@ -25,6 +26,9 @@ public class CustomerDTO {
     @NotBlank(message = "Email must be expressed")
     private String email;
 
-    @NotNull(message = "Password must be expressed")
-    private String hashcode;
+    @NotBlank(message = "Password must be expressed")
+    private String password;
+
+    private UserType userType;
+    private LocalDateTime createdAt;
 }

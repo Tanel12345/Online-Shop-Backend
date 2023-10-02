@@ -1,14 +1,24 @@
-package com.example.onlineshop.dto;
+package com.example.onlineshop.entity;
 
 import com.example.onlineshop.enums.user.UserType;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
+
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
-public class CustomerResponseDTO {
+@Entity
+@Table(name = "customer")
+public class UserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String firstName;
@@ -20,6 +30,9 @@ public class CustomerResponseDTO {
     private LocalDateTime createdAt;
 
     private String email;
+
+    private String password;
+
 
     private UserType userType;
 }

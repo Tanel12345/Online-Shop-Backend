@@ -1,4 +1,4 @@
-package com.example.onlineshop.model;
+package com.example.onlineshop.entity.product;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,22 +11,12 @@ import java.time.LocalDateTime;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "customer")
-public class Customer {
-
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String firstName;
+    private String CategoryName;
 
-    private String lastName;
 
-    private String username;
-
-    private LocalDateTime createdAt;
-
-    private String email;
-
-    private String hashcode;
 }
