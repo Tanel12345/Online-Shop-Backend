@@ -1,12 +1,11 @@
 package com.example.onlineshop.service;
 
-
-import com.example.onlineshop.config.CustomUserDetails;
-import com.example.onlineshop.entity.User;
+import com.example.onlineshop.entity.UserEntity;
 import com.example.onlineshop.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,13 +20,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserRepository userRepository;
 
-    public User findUserEntityByUsername(String username) {
-        return userRepository.findByEmail(username);
+    public UserEntity findUserEntityByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println(username);
-        User user = userRepository.findByEmail(username);
+        UserEntity user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
@@ -39,6 +38,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 //        }
 
-        return new CustomUserDetails(user);
+        return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
 }

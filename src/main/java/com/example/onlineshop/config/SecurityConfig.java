@@ -1,9 +1,7 @@
 package com.example.onlineshop.config;
 
 
-import com.example.onlineshop.dto.CustomerResponseDTO;
-import com.example.onlineshop.dto.UserDto;
-import com.example.onlineshop.entity.User;
+import com.example.onlineshop.entity.UserEntity;
 import com.example.onlineshop.mapper.CustomerMapper;
 import com.example.onlineshop.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +31,7 @@ public class SecurityConfig {
 
     private static final String REGISTER_ENDPOINT = "/customers/create";
     private static final String LOGIN_ENDPOINT = "/customers/login";
+    private static final String CATEGORY_ENDPOINT = "/category";
     private static final int COOKIE_VALIDITY_HOURS = 24;
 
     private UserDetailsServiceImpl userDetailsService;
@@ -46,29 +45,29 @@ public class SecurityConfig {
     }
 
     @Bean
-                public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
-                    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-                    authProvider.setUserDetailsService(userDetailsService);
-                    authProvider.setPasswordEncoder(passwordEncoder);
-                    return authProvider;
-                }
+    public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
+    }
 
-//              Mitte õnnestunud sisse logimisel saadetakse veateade päringu vastuseks
-                @Bean
-                public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-                    return http.authorizeHttpRequests(authRequests())
-                            .csrf(AbstractHttpConfigurer::disable)
-                            .formLogin(successLogin())
-                            .rememberMe(rememberMe())
-                            .exceptionHandling(exception -> {
-                                exception.authenticationEntryPoint((request, response, authException) -> {
-                                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
-                                });
-                            })
-                            .build();
-                }
+    //              Mitte õnnestunud sisse logimisel saadetakse veateade päringu vastuseks
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.authorizeHttpRequests(authRequests())
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(successLogin())
+                .rememberMe(rememberMe())
+                .exceptionHandling(exception -> {
+                    exception.authenticationEntryPoint((request, response, authException) -> {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+                    });
+                })
+                .build();
+    }
 
-                //Sedasi genereeritakse sisse logimise mitte õnnestumisel springi poolt bootstrapiga login leht
+    //Sedasi genereeritakse sisse logimise mitte õnnestumisel springi poolt bootstrapiga login leht
 //    @Bean
 //    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        return http.authorizeHttpRequests(authRequests())
@@ -78,30 +77,32 @@ public class SecurityConfig {
 //                .build();
 //    }
 
-                private Customizer<RememberMeConfigurer<HttpSecurity>> rememberMe() {
-                    return rememberMe -> rememberMe
-                            .tokenValiditySeconds(COOKIE_VALIDITY_HOURS * 60 * 60)
-                            .useSecureCookie(true);
-                }
+    private Customizer<RememberMeConfigurer<HttpSecurity>> rememberMe() {
+        return rememberMe -> rememberMe
+                .tokenValiditySeconds(COOKIE_VALIDITY_HOURS * 60 * 60)
+                .useSecureCookie(true);
+    }
 
-                private Customizer<FormLoginConfigurer<HttpSecurity>> successLogin() {
+    private Customizer<FormLoginConfigurer<HttpSecurity>> successLogin() {
 
-                    return formLogin -> formLogin
-                            .loginProcessingUrl(LOGIN_ENDPOINT)
-                            .successHandler((request, response, authentication) -> {
-                                response.setContentType("application/json;charset=UTF-8");
-                                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                User userEntity = userDetailsService.findUserEntityByUsername(userDetails.getUsername());
-                String json = mapper.writeValueAsString(
-                        customerMapper.userEntityToResponseDto(userEntity)
-                );
-                response.getWriter().write(json);
-            });
+        return formLogin -> formLogin
+                .loginProcessingUrl(LOGIN_ENDPOINT)
+                .successHandler((request, response, authentication) -> {
+                    response.setContentType("application/json;charset=UTF-8");
+                    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                    System.out.println("formLogin " + userDetails.getUsername());
+                    UserEntity userEntity = userDetailsService.findUserEntityByUsername(userDetails.getUsername());
+                    String json = mapper.writeValueAsString(
+                            customerMapper.userEntityToResponseDto(userEntity)
+                    );
+                    response.getWriter().write(json);
+                });
     }
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> authRequests() {
         return authorizeRequests -> authorizeRequests
                 .requestMatchers(new AntPathRequestMatcher(REGISTER_ENDPOINT, "POST")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher(CATEGORY_ENDPOINT, "GET")).permitAll()
                 .anyRequest().authenticated();
     }
 
