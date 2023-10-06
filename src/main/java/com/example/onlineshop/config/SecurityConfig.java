@@ -1,8 +1,8 @@
 package com.example.onlineshop.config;
 
 
-import com.example.onlineshop.entity.UserEntity;
-import com.example.onlineshop.mapper.CustomerMapper;
+import com.example.onlineshop.entity.user.UserEntity;
+import com.example.onlineshop.mapper.Mappings;
 import com.example.onlineshop.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ public class SecurityConfig {
     private UserDetailsServiceImpl userDetailsService;
 
     private ObjectMapper mapper;
-    private CustomerMapper customerMapper;
+    private Mappings mappings;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -93,7 +93,7 @@ public class SecurityConfig {
                     System.out.println("formLogin " + userDetails.getUsername());
                     UserEntity userEntity = userDetailsService.findUserEntityByUsername(userDetails.getUsername());
                     String json = mapper.writeValueAsString(
-                            customerMapper.userEntityToResponseDto(userEntity)
+                            mappings.userEntityToResponseDto(userEntity)
                     );
                     response.getWriter().write(json);
                 });
@@ -103,6 +103,8 @@ public class SecurityConfig {
         return authorizeRequests -> authorizeRequests
                 .requestMatchers(new AntPathRequestMatcher(REGISTER_ENDPOINT, "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher(CATEGORY_ENDPOINT, "GET")).permitAll()
+                .requestMatchers("/product/**").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
 

@@ -1,6 +1,7 @@
 package com.example.onlineshop.service;
 
-import com.example.onlineshop.entity.UserEntity;
+import com.example.onlineshop.entity.user.UserEntity;
+import com.example.onlineshop.enums.user.UserType;
 import com.example.onlineshop.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,14 +31,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
+
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        // You can add additional roles as needed
-//        if (user.isAdmin()) {
-//            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-//        }
+        if (user.getUserType() == UserType.CUSTOMER) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+        } else if (user.getUserType() == UserType.ADMIN) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
 
-        return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+        return new User(user.getUsername(), user.getPassword(), authorities);
     }
 }

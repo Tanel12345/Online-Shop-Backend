@@ -1,9 +1,10 @@
-package com.example.onlineshop.exception.handler;
+package com.example.onlineshop.exception;
 
 import com.example.onlineshop.dto.APIErrorResponse;
-import com.example.onlineshop.exception.EmailAlreadyExists;
-import com.example.onlineshop.exception.UsernameAlreadyExists;
-import org.springframework.dao.DataIntegrityViolationException;
+import com.example.onlineshop.exception.runtimeExceptions.*;
+import org.modelmapper.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,7 +15,8 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ExceptionHandler {
-    @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
+
+    @org.springframework.web.bind.annotation.ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<APIErrorResponse> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
 
         Map<String, String> errors = new HashMap<>();
@@ -26,20 +28,10 @@ public class ExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(UsernameAlreadyExists.class)
-    public ResponseEntity<APIErrorResponse> handleUsernameAlreadyExists(UsernameAlreadyExists ex, WebRequest request) {
+    @org.springframework.web.bind.annotation.ExceptionHandler({MyException.class})
+    public ResponseEntity<APIErrorResponse> handleMyException(MyException ex, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
-        errors.put("username", ex.getMessage());
-
-        APIErrorResponse response = APIErrorResponse.validationException(errors, request.getDescription(false));
-        return ResponseEntity.badRequest().body(response);
-    }
-
-    @org.springframework.web.bind.annotation.ExceptionHandler(EmailAlreadyExists.class)
-    public ResponseEntity<APIErrorResponse> handleEmailAlreadyExists(EmailAlreadyExists ex, WebRequest request) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("username", ex.getMessage());
-
+        errors.put(ex.getField(), ex.getMessage());
         APIErrorResponse response = APIErrorResponse.validationException(errors, request.getDescription(false));
         return ResponseEntity.badRequest().body(response);
     }
