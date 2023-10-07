@@ -1,6 +1,6 @@
 package com.example.onlineshop.config;
 
-import com.example.onlineshop.exception.runtimeExceptions.MyException;
+//import com.example.onlineshop.exception.runtimeExceptions.MyException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;

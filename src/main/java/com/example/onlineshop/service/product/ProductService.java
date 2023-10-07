@@ -22,11 +22,11 @@ public class ProductService {
 
         Product product = mappings.toProduct(productDTO);
 
-        if (productRepository.findByName(product.getName()) != null) {
-            throw new MyException(
-                    "Product name' " + product.getName() + "' already exists",
-                    FieldName.PRODUCT_NAME.getFieldName());
-        }
+//        if (productRepository.findByName(product.getName()) != null) {
+//            throw new MyException(
+//                    "Product name' " + product.getName() + "' already exists",
+//                    FieldName.PRODUCT_NAME.getFieldName());
+//        }
 
         productRepository.save(product);
 
