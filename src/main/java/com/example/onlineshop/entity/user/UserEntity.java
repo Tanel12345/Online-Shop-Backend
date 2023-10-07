@@ -1,4 +1,4 @@
-package com.example.onlineshop.entity;
+package com.example.onlineshop.entity.user;
 
 import com.example.onlineshop.enums.user.UserType;
 import jakarta.persistence.*;

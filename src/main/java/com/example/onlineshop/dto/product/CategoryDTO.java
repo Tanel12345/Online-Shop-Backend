@@ -1,5 +1,6 @@
 package com.example.onlineshop.dto.product;
 
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,4 +13,6 @@ import lombok.experimental.Accessors;
 
         private String categoryName;
     }
+
+
 
