@@ -1,6 +1,8 @@
 package com.example.onlineshop.dto;
 
 import com.example.onlineshop.enums.user.UserType;
+import com.example.onlineshop.validation.annotations.UniqueEmail;
+import com.example.onlineshop.validation.annotations.UniqueUsername;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -21,9 +23,11 @@ public class UserDto {
     private String lastName;
 
     @NotBlank(message = "Username must be expressed")
+    @UniqueUsername
     private String username;
 
     @NotBlank(message = "Email must be expressed")
+    @UniqueEmail
     private String email;
 
     @NotBlank(message = "Password must be expressed")
