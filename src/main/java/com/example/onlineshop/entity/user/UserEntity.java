@@ -2,6 +2,7 @@ package com.example.onlineshop.entity.user;
 
 import com.example.onlineshop.enums.user.UserType;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
