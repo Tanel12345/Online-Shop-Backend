@@ -21,7 +21,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserRepository userRepository;
 
-    public UserEntity findUserEntityByUsername(String username) {
+    public UserEntity findUserEntityByUsername(String username) { System.out.println(username);
+
         return userRepository.findByUsername(username);
     }
     @Override

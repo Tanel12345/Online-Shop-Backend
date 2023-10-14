@@ -5,12 +5,14 @@ import com.example.onlineshop.dto.CustomerResponseDTO;
 import com.example.onlineshop.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.Data;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Data
 @RestController
-@RequestMapping("/customers")
-//@CrossOrigin(origins = "http://localhost:4200/")
+//@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/api/customers")
+
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -21,4 +23,5 @@ public class CustomerController {
         System.out.println(userDTO);
         return customerService.createCustomer(userDTO);
     }
+
 }

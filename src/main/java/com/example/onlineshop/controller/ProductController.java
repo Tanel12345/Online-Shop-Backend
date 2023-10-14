@@ -24,9 +24,20 @@ public class ProductController {
         return categoryService.listAllCategories();
     }
 
-    @GetMapping("/product/category/{categoryId}")
-    public ResponseEntity<List<Product>> getAllProductsByCategoryId(@PathVariable Integer categoryId) {
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Product>> getAllProductsByCategoryIdWithPathParameter(@PathVariable Integer categoryId) {
         List<Product> products = productService.findAllProductsByCategoryId(categoryId);
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+    @GetMapping("/products")
+    public List<Product> getProductsWithQueryParameters(
+            @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            @RequestParam(name = "minPrice", required = false) Double minPrice,
+            @RequestParam(name = "maxPrice", required = false) Double maxPrice) {
+
+        // Implement your logic to filter products based on the query parameters
+        List<Product> filteredProducts = productService.filterProducts(categoryId, minPrice, maxPrice);
+
+        return filteredProducts;
     }
 }

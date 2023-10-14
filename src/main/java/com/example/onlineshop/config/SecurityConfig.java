@@ -7,6 +7,7 @@ import com.example.onlineshop.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,27 +18,37 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer;
+
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+
+
 
 @EnableWebSecurity
 @AllArgsConstructor
 @Configuration
 public class SecurityConfig {
 
-    private static final String REGISTER_ENDPOINT = "/customers/create";
-    private static final String LOGIN_ENDPOINT = "/customers/login";
-    private static final String CATEGORY_ENDPOINT = "/category";
+    private static final String REGISTER_ENDPOINT = "/api/customers/create";
+    private static final String LOGIN_ENDPOINT = "/api/customers/login";
+    private static final String CATEGORY_ENDPOINT = "/category/**";
+    private static final String PRODUCT_ENDPOINT = "/products/**";
     private static final int COOKIE_VALIDITY_HOURS = 24;
 
     private UserDetailsServiceImpl userDetailsService;
 
     private ObjectMapper mapper;
     private Mappings mappings;
+
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -55,8 +66,10 @@ public class SecurityConfig {
     //              Mitte õnnestunud sisse logimisel saadetakse veateade päringu vastuseks
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(authRequests())
+        return http.
+                authorizeHttpRequests(authRequests())
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .formLogin(successLogin())
                 .rememberMe(rememberMe())
                 .exceptionHandling(exception -> {
@@ -103,10 +116,18 @@ public class SecurityConfig {
         return authorizeRequests -> authorizeRequests
                 .requestMatchers(new AntPathRequestMatcher(REGISTER_ENDPOINT, "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher(CATEGORY_ENDPOINT, "GET")).permitAll()
-                .requestMatchers("/product/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher(PRODUCT_ENDPOINT, "GET")).permitAll()
+
+                .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
+
+
+
+
+
+
 
 //    private CustomerResponseDTO userEntityToResponseDto(User userEntity) {
 //

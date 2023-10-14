@@ -9,6 +9,7 @@ import com.example.onlineshop.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -35,5 +36,17 @@ public class ProductService {
 
     public List<Product> findAllProductsByCategoryId(Integer categoryId) {
         return productRepository.findByCategoryId(categoryId);
+    }
+
+    public List<Product> filterProducts(Integer categoryId, Double minPrice, Double maxPrice) {
+        if (categoryId != null && minPrice != null && maxPrice != null) {
+            return productRepository.findByCategoryIdAndPriceBetween(categoryId, minPrice, maxPrice);
+        } else if (categoryId != null) {
+            return productRepository.findByCategoryId(categoryId);
+        } else if (minPrice != null && maxPrice != null) {
+            return productRepository.findByPriceBetween(minPrice, maxPrice);
+        } else {
+            return productRepository.findAll();
+        }
     }
 }
